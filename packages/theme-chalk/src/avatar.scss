@@ -1,33 +1,34 @@
-@import 'mixins/mixins';
-@import 'common/var';
+@use 'sass:map';
 
-:root {
-  --el-avatar-font-color: #fff;
-  --el-avatar-background-color: #c0c4cc;
-  --el-avatar-text-font-size: 14px;
-  --el-avatar-icon-font-size: 18px;
-  --el-avatar-border-radius: var(--el-border-radius-base);
-  --el-avatar-large-size: 40px;
-  --el-avatar-medium-size: 36px;
-  --el-avatar-small-size: 28px;
-}
+@use 'mixins/mixins' as *;
+@use 'mixins/var' as *;
+@use 'common/var' as *;
 
 @include b(avatar) {
-  display: inline-block;
+  @include set-component-css-var('avatar', $avatar);
+  @include set-component-css-var('avatar-size', $avatar-size);
+
+  @include set-css-var-value(
+    ('avatar', 'size'),
+    map.get($avatar-size, 'default')
+  );
+
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
   box-sizing: border-box;
   text-align: center;
   overflow: hidden;
-  color: var(--el-avatar-font-color);
-  background: var(--el-avatar-background-color);
-  width: var(--el-avatar-large-size);
-  height: var(--el-avatar-large-size);
-  line-height: var(--el-avatar-large-size);
-  font-size: var(--el-avatar-text-font-size);
+  color: getCssVar('avatar', 'text-color');
+  background: getCssVar('avatar', 'bg-color');
+  width: getCssVar('avatar', 'size');
+  height: getCssVar('avatar', 'size');
+  font-size: getCssVar('avatar', 'text-size');
 
   > img {
     display: block;
+    width: 100%;
     height: 100%;
-    vertical-align: middle;
   }
 
   @include m(circle) {
@@ -35,18 +36,19 @@
   }
 
   @include m(square) {
-    border-radius: var(--el-avatar-border-radius);
+    border-radius: getCssVar('avatar', 'border-radius');
   }
 
   @include m(icon) {
-    font-size: var(--el-avatar-icon-font-size);
+    font-size: getCssVar('avatar', 'icon-size');
   }
 
-  @each $size in (small, medium, large) {
+  @each $size in (small, large) {
     @include m($size) {
-      width: var(--el-avatar-#{$size}-size);
-      height: var(--el-avatar-#{$size}-size);
-      line-height: var(--el-avatar-#{$size}-size);
+      @include set-css-var-value(
+        ('avatar', 'size'),
+        map.get($avatar-size, $size)
+      );
     }
   }
 }

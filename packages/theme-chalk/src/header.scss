@@ -1,14 +1,12 @@
-@import 'mixins/mixins';
-@import 'common/var';
-
-:root {
-  --el-header-padding: 0 20px;
-  --el-header-height: 60px;
-}
+@use 'mixins/mixins' as *;
+@use 'mixins/var' as *;
+@use 'common/var' as *;
 
 @include b(header) {
-  padding: var(--el-header-padding);
+  @include set-component-css-var('header', $header);
+
+  padding: getCssVar('header-padding');
   box-sizing: border-box;
   flex-shrink: 0;
-  height: var(--el-header-height);
+  height: getCssVar('header-height');
 }

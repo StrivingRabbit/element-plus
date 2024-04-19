@@ -1,11 +1,11 @@
-@import 'mixins/mixins';
-@import 'common/var';
+@use 'sass:map';
 
-:root {
-  --el-scrollbar-opacity: 0.3;
-  --el-scrollbar-background-color: var(--el-text-color-secondary);
-  --el-scrollbar-hover-opacity: 0.5;
-  --el-scrollbar-hover-background-color: var(--el-text-color-secondary);
+@use 'mixins/mixins' as *;
+@use 'mixins/var' as *;
+@use 'common/var' as *;
+
+@include b(scrollbar) {
+  @include set-component-css-var('scrollbar', $scrollbar);
 }
 
 @include b(scrollbar) {
@@ -32,13 +32,25 @@
     height: 0;
     cursor: pointer;
     border-radius: inherit;
-    background-color: var(--el-scrollbar-background-color);
-    transition: var(--el-transition-duration) background-color;
-    opacity: var(--el-scrollbar-opacity);
+    background-color: var(
+      #{getCssVarName('scrollbar-bg-color')},
+      map.get($scrollbar, 'bg-color')
+    );
+    transition: getCssVar('transition-duration') background-color;
+    opacity: var(
+      #{getCssVarName('scrollbar-opacity')},
+      map.get($scrollbar, 'opacity')
+    );
 
     &:hover {
-      background-color: var(--el-scrollbar-hover-background-color);
-      opacity: var(--el-scrollbar-hover-opacity);
+      background-color: var(
+        #{getCssVarName('scrollbar-hover-bg-color')},
+        map.get($scrollbar, 'hover-bg-color')
+      );
+      opacity: var(
+        #{getCssVarName('scrollbar-hover-opacity')},
+        map.get($scrollbar, 'hover-opacity')
+      );
     }
   }
 
@@ -69,15 +81,17 @@
   }
 }
 
-.#{$namespace}-scrollbar-fade-enter-active {
-  transition: opacity 340ms ease-out;
-}
+.#{$namespace}-scrollbar-fade {
+  &-enter-active {
+    transition: opacity 340ms ease-out;
+  }
 
-.#{$namespace}-scrollbar-fade-leave-active {
-  transition: opacity 120ms ease-out;
-}
+  &-leave-active {
+    transition: opacity 120ms ease-out;
+  }
 
-.#{$namespace}-scrollbar-fade-enter-from,
-.#{$namespace}-scrollbar-fade-leave-active {
-  opacity: 0;
+  &-enter-from,
+  &-leave-active {
+    opacity: 0;
+  }
 }
